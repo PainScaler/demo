@@ -1,0 +1,9 @@
+demo.painscaler.com {
+    encode zstd gzip
+
+    handle_path /api/* {
+        reverse_proxy painscaler-api:8080
+    }
+
+    reverse_proxy painscaler-web:80
+}

@@ -1,0 +1,4 @@
+[submodule "painscaler"]
+	path = painscaler
+	url = git@github.com:PainScaler/painscaler.git
+	branch = main

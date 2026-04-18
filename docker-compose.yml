@@ -1,0 +1,49 @@
+services:
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - painscaler-web
+    networks: [demo]
+
+  painscaler-api:
+    build:
+      context: ./painscaler
+      dockerfile: deploy/Dockerfile.api
+    image: painscaler-demo-api:local
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - PAINSCALER_DEMO_SEED=/data/snapshot.json
+    volumes:
+      - ./snapshot.json:/data/snapshot.json:ro
+      - painscaler_data:/data
+    expose: ["8080"]
+    networks: [demo]
+
+  painscaler-web:
+    build:
+      context: ./painscaler
+      dockerfile: deploy/Dockerfile.web
+    image: painscaler-demo-web:local
+    restart: unless-stopped
+    expose: ["80"]
+    depends_on:
+      - painscaler-api
+    networks: [demo]
+
+volumes:
+  caddy_data:
+  caddy_config:
+  painscaler_data:
+
+networks:
+  demo:
+    driver: bridge

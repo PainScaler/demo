@@ -1,0 +1,33 @@
+name: deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEMO_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H "${{ secrets.DEMO_SSH_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Sync repo to host
+        run: |
+          rsync -az --delete \
+            --exclude '.git' \
+            --exclude '.github' \
+            ./ "${{ secrets.DEMO_SSH_USER }}@${{ secrets.DEMO_SSH_HOST }}:/opt/painscaler-demo/"
+
+      - name: Rebuild and restart
+        run: |
+          ssh "${{ secrets.DEMO_SSH_USER }}@${{ secrets.DEMO_SSH_HOST }}" \
+            "cd /opt/painscaler-demo && docker compose up -d --build"

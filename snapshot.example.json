@@ -1,0 +1,17 @@
+{
+  "ClientTypes": [],
+  "Segments": [],
+  "SegmentGroups": [],
+  "AppConnectors": [],
+  "AppConnectorGroups": [],
+  "AccessPolicies": [],
+  "ScimGroups": [],
+  "ServerGroups": [],
+  "ApplicationServers": [],
+  "TrustedNetworks": [],
+  "PostureProfiles": [],
+  "Platforms": [],
+  "IdpControllers": [],
+  "ScimAttributeHeaders": [],
+  "Certificates": []
+}
