@@ -30,4 +30,4 @@ jobs:
       - name: Rebuild and restart
         run: |
           ssh "${{ secrets.DEMO_SSH_USER }}@${{ secrets.DEMO_SSH_HOST }}" \
-            "cd /opt/painscaler-demo && docker compose up -d --build"
+            "cd /opt/painscaler-demo && podman compose up -d --build"
